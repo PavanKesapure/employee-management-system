@@ -1,0 +1,80 @@
+:root {
+  --bg: #f4f6fb;
+  --card: #ffffff;
+  --text: #1a1d23;
+  --muted: #6b7280;
+  --border: #e5e7eb;
+  --primary: #4f46e5;
+  --primary-hover: #4338ca;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --blue: #3b82f6;
+}
+[data-theme='dark'] {
+  --bg: #0f1420;
+  --card: #1a2233;
+  --text: #f3f4f6;
+  --muted: #9ca3af;
+  --border: #2b3650;
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+.navbar {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--card); border: 1px solid var(--border);
+  padding: 14px 20px; border-radius: 14px; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+}
+.nav-brand { display: flex; gap: 12px; align-items: center; }
+.logo { font-size: 38px; }
+.nav-brand h1 { margin: 0; font-size: 22px; }
+.nav-brand p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+.nav-actions { display: flex; gap: 10px; }
+.btn {
+  padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border);
+  background: var(--card); color: var(--text); cursor: pointer; font-size: 14px;
+}
+.btn-primary { background: var(--primary); border-color: var(--primary); color: #fff; font-weight: 600; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-toggle { font-weight: 600; }
+.btn-small { padding: 6px 10px; font-size: 12px; margin-right: 6px; }
+.btn-danger { background: var(--red); border-color: var(--red); color: #fff; }
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.stat-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px; display: flex; gap: 12px; align-items: center;
+}
+.stat-icon { font-size: 30px; }
+.stat-card h3 { margin: 0; font-size: 26px; }
+.stat-card p { margin: 0; color: var(--muted); font-size: 13px; }
+.toolbar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.search { flex: 1; min-width: 220px; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); }
+.toolbar select { padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--card); color: var(--text); }
+.table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+th { color: var(--muted); text-transform: uppercase; font-size: 12px; }
+.badge { background: #eef2ff; color: #4f46e5; padding: 3px 10px; border-radius: 20px; font-size: 12px; }
+[data-theme='dark'] .badge { background: #2b3650; color: #a5b4fc; }
+.status { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+.status.active { background: #dcfce7; color: #166534; }
+.status.on-leave { background: #fef3c7; color: #92400e; }
+.status.inactive { background: #fee2e2; color: #991b1b; }
+.empty { text-align: center; color: var(--muted); padding: 30px; }
+.alert { background: #fee2e2; color: #991b1b; padding: 12px; border-radius: 8px; margin-bottom: 14px; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 50; padding: 16px; }
+.modal { background: var(--card); color: var(--text); border-radius: 14px; padding: 24px; width: 560px; max-width: 100%; max-height: 90vh; overflow-y: auto; }
+.modal h2 { margin-top: 0; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.form-grid input, .form-grid select { padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
+.modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+@media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }

@@ -1,0 +1,267 @@
+================================================================================
+                  EMPLOYEE MANAGEMENT SYSTEM - PROJECT OVERVIEW
+                  MERN Stack | MongoDB + Express + React + Node.js
+================================================================================
+
+PROJECT NAME : Employee Management System
+STACK        : MERN (MongoDB, Express.js, React.js, Node.js)
+FRONTEND     : React 18 + Vite (port 3000)
+BACKEND      : Express.js + Mongoose (port 5000)
+DATABASE     : MongoDB (local or Atlas cloud)
+THEME        : Day / Night mode (toggle, saved in localStorage)
+EDITOR       : 100% VS Code compatible
+
+--------------------------------------------------------------------------------
+1. PROJECT FOLDER STRUCTURE (FRONTEND + BACKEND)
+--------------------------------------------------------------------------------
+
+employee-management-system/
+|
+|-- package.json                 <- root helper (install:all, dev:backend, etc.)
+|-- jsconfig.json                <- VS Code path intellisense
+|-- .gitignore
+|-- .vscode/
+|     |-- settings.json          <- format on save, prettier, tab size 2
+|     |-- extensions.json        <- recommended VS Code extensions
+|     |-- launch.json            <- F5 debug: backend / frontend / seed / full-stack
+|
+|-- backend/                     <- BACKEND (Node + Express + MongoDB)
+|     |-- package.json
+|     |-- server.js              <- entry point, connects DB then listens :5000
+|     |-- seed.js                <- inserts 5 sample employees (npm run seed)
+|     |-- .env                   <- your real connection string (git-ignored)
+|     |-- .env.example           <- template connection string
+|     |-- config/
+|     |     |-- db.js            <- mongoose.connect(process.env.MONGO_URI)
+|     |-- models/
+|     |     |-- Employee.js      <- schema: name, email(unique), phone,
+|     |                              position, department(enum 8), salary,
+|     |                              dateOfJoining, status, address, timestamps
+|     |-- controllers/
+|     |     |-- employeeController.js  <- getEmployees, getEmployee,
+|     |                                  createEmployee, updateEmployee,
+|     |                                  deleteEmployee, getStats
+|     |-- routes/
+|     |     |-- employeeRoutes.js      <- GET/POST /api/employees,
+|     |                                  GET/PUT/DELETE /api/employees/:id,
+|     |                                  GET /api/employees/stats/summary
+|     |-- middleware/
+|           |-- errorHandler.js  <- notFound + validation/duplicate/cast errors
+|
+|-- frontend/                    <- FRONTEND (React + Vite)
+|     |-- package.json
+|     |-- vite.config.js         <- port 3000 + /api proxy to :5000
+|     |-- index.html
+|     |-- .env.example           <- VITE_API_URL=http://localhost:5000/api
+|     |-- src/
+|           |-- main.jsx         <- React root + ThemeProvider
+|           |-- App.jsx          <- renders Dashboard
+|           |-- index.css        <- light/dark CSS variables + full UI styles
+|           |-- services/
+|           |     |-- api.js     <- axios instance + 5 CRUD functions
+|           |-- context/
+|           |     |-- ThemeContext.jsx  <- DAY/NIGHT mode logic
+|           |-- components/
+|           |     |-- Navbar.jsx        <- brand + Add button + Day/Night toggle
+|           |     |-- StatsCards.jsx    <- Total / Active / On Leave / Inactive
+|           |     |-- SearchBar.jsx     <- search + department + status filters
+|           |     |-- EmployeeTable.jsx <- table with Edit/Delete
+|           |     |-- EmployeeForm.jsx    <- Add/Edit modal form
+|           |-- pages/
+|                 |-- Dashboard.jsx  <- main page: loads data, stats, CRUD
+|
+|-- PROJECT_OVERVIEW.txt         <- THIS FILE (views, features, MongoDB guide)
+
+--------------------------------------------------------------------------------
+2. ALL VIEWS OF THE PROJECT (WHAT YOU SEE IN THE BROWSER)
+--------------------------------------------------------------------------------
+
+VIEW 1 - NAVBAR (Top bar, always visible)
+  - Left  : logo + "Employee Management System" + "MERN Stack" subtitle
+  - Right : [+ Add Employee] button + [Night/Day] toggle button
+  - Day mode   : light background, dark text
+  - Night mode : dark background (#0f1420), light text, saved in localStorage
+
+VIEW 2 - STATS DASHBOARD CARDS (4 cards under navbar)
+  - Total Employees (blue, icon)
+  - Active (green)
+  - On Leave (yellow)
+  - Inactive (red)
+  - Data comes live from GET /api/employees/stats/summary
+
+VIEW 3 - SEARCH + FILTER TOOLBAR
+  - Search box      : "Search by name, email, position..." (live, 300ms debounce)
+  - Department drop : All + Engineering, HR, Marketing, Sales, Finance,
+                      Support, Operations, Design
+  - Status drop     : All + Active + On Leave + Inactive
+
+VIEW 4 - EMPLOYEE TABLE (main view)
+  - Columns: Name (+phone) | Email | Position | Department(badge) |
+             Salary (INR formatted) | Status (color pill) | Actions
+  - Status colors: Active=green, On Leave=yellow, Inactive=red
+  - Actions per row: [Edit] [Delete]
+  - Empty state: "No employees found. Click + Add Employee..."
+  - Loading state: "Loading..."
+  - Error state (backend down): red alert box with fix instructions
+
+VIEW 5 - ADD / EDIT MODAL FORM (popup)
+  - Opens on "+ Add Employee" or row "Edit"
+  - Fields: Name*, Email*, Phone*, Position*, Department*(dropdown),
+            Salary*(number), Status(dropdown), Address
+  - Buttons: [Cancel] [Create/Update]
+  - Validation: required fields, email format, unique email, salary >= 0
+  - Duplicate email shows: "Email already exists. Use a unique email."
+
+VIEW 6 - DELETE CONFIRMATION
+  - Browser confirm("Delete this employee?") -> DELETE /api/employees/:id
+
+VIEW 7 - BACKEND HEALTH CHECK (browser: http://localhost:5000/)
+  - JSON: { success:true, message:"Employee Management System API is running" }
+
+--------------------------------------------------------------------------------
+3. KEY FEATURES OF THE PROJECT
+--------------------------------------------------------------------------------
+
+ 1. Full CRUD           : Create, Read (list + single), Update, Delete employees.
+ 2. Live Search         : Name / email / position, case-insensitive regex.
+ 3. Filters             : By department + by status, combinable with search.
+ 4. Sorting + Paging    : ?sort=-createdAt, ?page= ?limit= supported by API.
+ 5. Dashboard Stats     : Totals + department-wise counts via aggregation.
+ 6. Day / Night Mode    : One-click toggle in navbar. Uses CSS variables +
+                          data-theme attribute. Choice persists in localStorage.
+ 7. Form Validation     : Frontend required + backend Mongoose validators +
+                          friendly duplicate-email / bad-ID error messages.
+ 8. Responsive Design   : Grid stats, scrollable table, 1-column form on mobile.
+ 9. Proxy Setup         : Vite proxies /api -> :5000, no CORS pain in dev.
+ 10. Seed Script        : `npm run seed` loads 5 demo employees instantly.
+ 11. VS Code Ready      : settings, extensions, F5 launch configs, jsconfig.
+ 12. Clean Errors       : Central errorHandler middleware, consistent
+                          { success:false, error:"..." } responses.
+
+API ENDPOINTS:
+  GET    /                              -> health check
+  GET    /api/employees?search=&department=&status=&sort=&page=&limit=
+  GET    /api/employees/:id
+  POST   /api/employees                 (body: name,email,phone,position,department,salary,...)
+  PUT    /api/employees/:id
+  DELETE /api/employees/:id
+  GET    /api/employees/stats/summary
+
+--------------------------------------------------------------------------------
+4. HOW TO CONNECT MONGODB DATABASE (3 OPTIONS - STEP BY STEP)
+--------------------------------------------------------------------------------
+
+The backend reads connection from backend/.env -> MONGO_URI.
+File backend/config/db.js does: mongoose.connect(process.env.MONGO_URI).
+
+--- OPTION A: LOCAL MONGODB (easiest for VS Code + offline) ---
+
+  Step 1. Install MongoDB Community Server from https://www.mongodb.com/try/download/community
+  Step 2. Start MongoDB:
+            Windows : it runs as a service automatically. Or run `mongod`.
+            Mac     : `brew services start mongodb-community`
+            Linux   : `sudo systemctl start mongod`
+  Step 3. Check it runs: open http://localhost:27017 in browser
+          (you should see "It looks like you are trying to access MongoDB over HTTP").
+  Step 4. Edit backend/.env to:
+            PORT=5000
+            MONGO_URI=mongodb://127.0.0.1:27017/employeeDB
+            DB_NAME=employeeDB
+  Step 5. Start backend:
+            cd backend
+            npm install
+            npm run seed     <- creates employeeDB + 5 sample docs
+            npm run dev
+  Step 6. Verify: backend console shows
+            "MongoDB Connected: localhost / DB: employeeDB"
+  Step 7. Optional VS Code check: install "MongoDB for VS Code" extension
+          -> click MongoDB icon -> "Add Connection" -> mongodb://127.0.0.1:27017
+          -> browse employeeDB -> employees collection.
+
+--- OPTION B: MONGODB ATLAS (CLOUD, free, works everywhere) ---
+
+  Step 1. Go to https://cloud.mongodb.com -> Sign up / Log in -> Create free M0 cluster.
+  Step 2. Database Access -> Add Database User -> username + password (save them!).
+  Step 3. Network Access -> Add IP Address -> "Allow Access from Anywhere" (0.0.0.0/0) for dev.
+  Step 4. Cluster -> Connect -> "Drivers" -> Node.js -> copy the connection string.
+          Example: mongodb+srv://myuser:mypass@cluster0.xxxxx.mongodb.net/?retryWrites=true&w=majority
+  Step 5. Edit backend/.env to:
+            PORT=5000
+            MONGO_URI=mongodb+srv://myuser:mypass@cluster0.xxxxx.mongodb.net/employeeDB?retryWrites=true&w=majority
+            DB_NAME=employeeDB
+          (Replace myuser, mypass, xxxxx with your real values.
+           Keep /employeeDB before the ? so it uses the right database.)
+  Step 6. cd backend && npm install && npm run seed && npm run dev
+  Step 7. Check Atlas dashboard -> Browse Collections -> employeeDB -> employees.
+
+--- OPTION C: DOCKER MONGODB (no install, one command) ---
+
+  Step 1. Install Docker Desktop.
+  Step 2. Run:  docker run -d -p 27017:27017 --name ems-mongo mongo:7
+  Step 3. Use same backend/.env as OPTION A, then npm run seed + npm run dev.
+
+TROUBLESHOOTING:
+  - "MongoServerSelectionError / ECONNREFUSED" -> MongoDB is not running. Start it (Option A step 2).
+  - "Authentication failed" (Atlas) -> wrong username/password or special chars
+    in password must be URL-encoded (e.g. @ becomes %40).
+  - "IP not whitelisted" (Atlas) -> add 0.0.0.0/0 in Network Access.
+  - "Email already exists" -> normal: email field is unique. Use another email.
+  - Frontend "Cannot reach backend" red box -> backend not running on :5000.
+    Open a second terminal and run backend dev server.
+
+--------------------------------------------------------------------------------
+5. HOW TO RUN THE FULL PROJECT (VS CODE)
+--------------------------------------------------------------------------------
+
+  PREREQUISITE: Node.js 18+ (check with `node -v`) and MongoDB (see section 4).
+
+  METHOD 1 - Two terminals (recommended for beginners):
+    Terminal 1 (backend):
+      cd employee-management-system/backend
+      npm install
+      npm run seed      (first time only, or to reset demo data)
+      npm run dev       -> http://localhost:5000
+    Terminal 2 (frontend):
+      cd employee-management-system/frontend
+      npm install
+      npm run dev       -> http://localhost:3000
+
+  METHOD 2 - Root helper:
+      cd employee-management-system
+      npm run install:all
+      npm run seed
+      (then run dev:backend and dev:frontend in two terminals,
+       or use VS Code debug compound below)
+
+  METHOD 3 - VS Code F5 debugging (fully compatible):
+    1. Open folder employee-management-system in VS Code (File -> Open Folder).
+    2. Install recommended extensions when VS Code prompts (or open
+       .vscode/extensions.json list: Prettier, ESLint, MongoDB).
+    3. Press F5 -> choose "Full Stack (backend + frontend)".
+       Backend runs with backend/.env, frontend opens in Chrome at :3000.
+    4. Other configs: "Backend: nodemon server.js", "Backend: seed database",
+       "Frontend: Chrome (vite dev)".
+
+  DAY / NIGHT MODE:
+    - Click "Night"/"Day" button in navbar (top-right).
+    - Implemented in frontend/src/context/ThemeContext.jsx:
+      theme state -> document.documentElement data-theme -> CSS variables
+      in index.css switch. Saved to localStorage key "ems-theme".
+    - To force default dark: change useState initial to 'dark'.
+
+--------------------------------------------------------------------------------
+6. QUICK FILE MAP (where to edit what)
+--------------------------------------------------------------------------------
+
+  Add a new employee field?  -> backend/models/Employee.js (schema)
+                             + frontend/src/components/EmployeeForm.jsx (input)
+                             + frontend/src/components/EmployeeTable.jsx (column)
+  Change API URL?            -> frontend/.env / frontend/src/services/api.js (VITE_API_URL)
+  Change DB connection?      -> backend/.env (MONGO_URI)
+  Change theme colors?       -> frontend/src/index.css (:root + [data-theme='dark'])
+  Change port?               -> backend/.env PORT + frontend/vite.config.js proxy
+
+================================================================================
+  Created inside employee-management-system/ as requested.
+  Open this folder in VS Code and follow section 5 to run.
+================================================================================
