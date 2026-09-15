@@ -1,0 +1,109 @@
+================================================================================
+  EMPLOYEE MANAGEMENT SYSTEM - SETUP & RUN GUIDE
+  MERN Stack | MongoDB + Express + React + Node.js | VS Code Ready
+================================================================================
+
+Follow the steps IN ORDER: 1 -> 2 -> 3 -> 4.
+
+--------------------------------------------------------------------------------
+STEP 1: REQUIREMENTS (install once)
+--------------------------------------------------------------------------------
+  1. Node.js 18 or newer ......... https://nodejs.org  (check: node -v)
+  2. MongoDB (pick ONE option below - local install recommended for VS Code)
+  3. VS Code ..................... https://code.visualstudio.com
+
+--------------------------------------------------------------------------------
+STEP 2: CONNECT MONGODB (pick OPTION A, B, or C)
+--------------------------------------------------------------------------------
+The backend reads the connection string from:  backend/.env  ->  MONGO_URI
+
+----- OPTION A: LOCAL MONGODB (recommended, works offline) -----
+  1. Install MongoDB Community Server: https://www.mongodb.com/try/download/community
+  2. Start MongoDB:
+       Windows : starts automatically as a service (or run "mongod" in terminal)
+       Mac     : brew services start mongodb-community
+       Linux   : sudo systemctl start mongod
+  3. Check it is running: open http://localhost:27017 in a browser.
+     You should see: "It looks like you are trying to access MongoDB over HTTP".
+  4. Open backend/.env and make sure it has EXACTLY this:
+       PORT=5000
+       MONGO_URI=mongodb://127.0.0.1:27017/employeeDB
+       DB_NAME=employeeDB
+
+----- OPTION B: MONGODB ATLAS (free cloud database) -----
+  1. Go to https://cloud.mongodb.com -> create free M0 cluster.
+  2. Database Access -> Add Database User -> save username + password.
+  3. Network Access -> Add IP -> "Allow Access from Anywhere" (0.0.0.0/0).
+  4. Cluster -> Connect -> Drivers -> Node.js -> copy connection string.
+  5. Put it in backend/.env like this (replace USER, PASS, CLUSTER):
+       PORT=5000
+       MONGO_URI=mongodb+srv://USER:PASS@CLUSTER.xxxxx.mongodb.net/employeeDB?retryWrites=true&w=majority
+       DB_NAME=employeeDB
+     NOTE: keep "/employeeDB" before the "?" so the correct database is used.
+
+----- OPTION C: DOCKER MONGODB (no install) -----
+  1. Install Docker Desktop, then run:
+       docker run -d -p 27017:27017 --name ems-mongo mongo:7
+  2. Use the same backend/.env as OPTION A.
+
+--------------------------------------------------------------------------------
+STEP 3: INSTALL PACKAGES + LOAD DEMO DATA (first time only)
+--------------------------------------------------------------------------------
+Open a terminal in the project folder (employee-management-system/) and run:
+
+  npm run install:all     <- installs backend + frontend packages (2-3 min)
+  npm run seed            <- creates "employeeDB" with 5 sample employees
+
+If "npm run seed" prints "Database seeded with sample employees", MongoDB is
+connected correctly. If it shows ECONNREFUSED, MongoDB is NOT running -
+go back to STEP 2.
+
+--------------------------------------------------------------------------------
+STEP 4: START BACKEND + FRONTEND
+--------------------------------------------------------------------------------
+You need TWO running terminals (backend :5000 and frontend :3000).
+
+  Terminal 1 - BACKEND:
+    cd backend
+    npm run dev
+    -> wait for: "MongoDB Connected: ... / DB: employeeDB"
+    -> wait for: "Server running on http://localhost:5000"
+
+  Terminal 2 - FRONTEND:
+    cd frontend
+    npm run dev
+    -> wait for: "Local: http://localhost:3000/"
+
+  ---- EASIER WAY INSIDE VS CODE (no manual terminals) ----
+  1. Open the "employee-management-system" folder in VS Code (File -> Open Folder).
+  2. Install the extensions VS Code suggests (Prettier, ESLint, MongoDB).
+  3. Press Ctrl+Shift+P -> type "Run Task" -> Enter, then run in order:
+       "1. Install all dependencies"   (first time only)
+       "2. Seed demo data"             (first time only)
+       "3. Start full stack (backend + frontend)"
+  4. OR press F5 -> "Full Stack (backend + frontend)" for debugging.
+
+--------------------------------------------------------------------------------
+STEP 5: VERIFY IT WORKS
+--------------------------------------------------------------------------------
+  Frontend UI ...... http://localhost:3000   (employee table + stats + Day/Night toggle)
+  Backend health ... http://localhost:5000   (shows {"success":true,...} JSON)
+  Stats API ........ http://localhost:5000/api/employees/stats/summary
+
+--------------------------------------------------------------------------------
+TROUBLESHOOTING
+--------------------------------------------------------------------------------
+  * "MongoServerSelectionError / ECONNREFUSED" -> MongoDB is not running. STEP 2.
+  * "Authentication failed" (Atlas) -> wrong user/password in MONGO_URI.
+    Special characters in password must be URL-encoded (@ becomes %40).
+  * "IP not whitelisted" (Atlas) -> add 0.0.0.0/0 in Network Access.
+  * Red "Cannot reach backend" box in UI -> backend is not running on :5000.
+  * "Email already exists" -> normal, email must be unique. Use another email.
+  * Port already in use -> close the old terminal, or change PORT in
+    backend/.env (and the proxy target in frontend/vite.config.js).
+  * node_modules missing errors -> run "npm run install:all" again (STEP 3).
+
+================================================================================
+  QUICK FILE MAP: DB connection -> backend/.env | API calls -> frontend/src/services/api.js
+  More details: PROJECT_OVERVIEW.txt | README.md
+================================================================================

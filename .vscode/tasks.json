@@ -1,0 +1,66 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "1. Install all dependencies",
+      "detail": "Runs npm install in backend + frontend (root helper script)",
+      "type": "shell",
+      "command": "npm run install:all",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new" },
+      "problemMatcher": []
+    },
+    {
+      "label": "2. Seed demo data (first time only)",
+      "detail": "Loads 5 sample employees into MongoDB",
+      "type": "shell",
+      "command": "npm run seed",
+      "options": { "cwd": "${workspaceFolder}" },
+      "presentation": { "reveal": "always", "panel": "new" },
+      "problemMatcher": []
+    },
+    {
+      "label": "3a. Start backend (:5000)",
+      "detail": "Express API with nodemon (auto-restart on save)",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/backend" },
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "new" },
+      "problemMatcher": {
+        "owner": "ems-backend",
+        "pattern": { "regexp": "a^" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": "Server running on.*"
+        }
+      }
+    },
+    {
+      "label": "3b. Start frontend (:3000)",
+      "detail": "React + Vite dev server",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": { "cwd": "${workspaceFolder}/frontend" },
+      "isBackground": true,
+      "presentation": { "reveal": "always", "panel": "new" },
+      "problemMatcher": {
+        "owner": "ems-frontend",
+        "pattern": { "regexp": "a^" },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*",
+          "endsPattern": "ready in.*"
+        }
+      }
+    },
+    {
+      "label": "3. Start full stack (backend + frontend)",
+      "detail": "Starts 3a + 3b together in parallel",
+      "dependsOn": ["3a. Start backend (:5000)", "3b. Start frontend (:3000)"],
+      "dependsOrder": "parallel",
+      "problemMatcher": []
+    }
+  ]
+}
